@@ -6,13 +6,12 @@ logging.basicConfig(format='%(asctime)s.%(msecs)03d [%(threadName)s] - %(message
 
 
 cantidad = 1
-lock = threading.Lock()
+lock = threading.Semaphore(0)
 
 def sumarUno():
     logging.info("sumar")
     global cantidad
     global lock
-    lock.acquire()
     cantidad += 1
     lock.release()
     logging.info("finalizar")
@@ -35,12 +34,14 @@ def multiplicarPorDos():
 
 
 
-threadSumarUno = threading.Thread(target=sumarUno, name='multiplicar')
-threadMultiplicarPorDos = threading.Thread(target=multiplicarPorDos, name = 'sumar' )
+threadSumarUno = threading.Thread(target=sumarUno, name='sumar')
+threadMultiplicarPorDos = threading.Thread(target=multiplicarPorDos, name = 'multiplicar' )
+
+
+
+
 
 threadMultiplicarPorDos.start()
-
-lock.acquire()
 threadSumarUno.start()
 
 
